@@ -23,7 +23,7 @@ const PREVIEW_VARS = {
 
 export default function TemplatesPage() {
   const router = useRouter()
-  const { addToast } = useToast()
+  const { toast } = useToast()
   const [category, setCategory] = React.useState('All')
   const { data: templates, isLoading } = useApi<Template[]>(
     `/api/templates?category=${category}`,
@@ -44,9 +44,9 @@ export default function TemplatesPage() {
         is_premium: false,
       })
       await refresh(`/api/templates?category=${category}`)
-      addToast('Template duplicated', 'success')
+      toast('Template duplicated', 'success')
     } catch {
-      addToast('Could not duplicate template', 'error')
+      toast('Could not duplicate template', 'error')
     } finally {
       setBusy(null)
     }
@@ -54,16 +54,16 @@ export default function TemplatesPage() {
 
   async function handleDelete(tpl: Template) {
     if (tpl.owner_id === 'system') {
-      addToast('System templates cannot be deleted', 'error')
+      toast('System templates cannot be deleted', 'error')
       return
     }
     setBusy(tpl.id)
     try {
       await apiDelete(`/api/templates/${tpl.id}`)
       await refresh(`/api/templates?category=${category}`)
-      addToast('Template deleted', 'success')
+      toast('Template deleted', 'success')
     } catch {
-      addToast('Could not delete template', 'error')
+      toast('Could not delete template', 'error')
     } finally {
       setBusy(null)
     }
@@ -100,7 +100,7 @@ export default function TemplatesPage() {
       })
       router.push(`/app/templates/${tpl.id}`)
     } catch {
-      addToast('Could not create template', 'error')
+      toast('Could not create template', 'error')
       setBusy(null)
     }
   }
@@ -157,7 +157,7 @@ export default function TemplatesPage() {
               <div className="relative flex items-center justify-center overflow-hidden bg-muted/40 p-4">
                 <TemplatePreview template={tpl} vars={PREVIEW_VARS} maxWidth={220} />
                 {tpl.is_premium && (
-                  <Badge className="absolute right-3 top-3 gap-1 bg-amber-500 text-white">
+                  <Badge tone="accent" className="absolute right-3 top-3 gap-1">
                     <Crown className="h-3 w-3" /> Premium
                   </Badge>
                 )}
