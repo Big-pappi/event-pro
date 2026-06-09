@@ -7,6 +7,7 @@ import {
   Users,
   Palette,
   Send,
+  BarChart3,
 } from 'lucide-react'
 import { DashboardShell, type NavItem } from '@/components/app/shell'
 import { useRequireRole } from '@/lib/auth'
@@ -17,6 +18,7 @@ const nav: NavItem[] = [
   { href: '/app/invitees', label: 'Invitees', icon: Users },
   { href: '/app/templates', label: 'Templates', icon: Palette },
   { href: '/app/send', label: 'Send invitations', icon: Send },
+  { href: '/app/campaigns', label: 'Campaigns', icon: BarChart3 },
 ]
 
 export default function AgentLayout({ children }: { children: React.ReactNode }) {
