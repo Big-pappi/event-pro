@@ -11,8 +11,12 @@ import uuid
 from datetime import datetime
 from typing import Any, Optional
 
+import io
+
 import fastapi
 import fastapi.middleware.cors
+import fastapi.responses
+import qrcode
 from pydantic import BaseModel
 
 import store
@@ -46,6 +50,30 @@ def _plan(plan_id: str) -> dict:
 @app.get("/health")
 async def health() -> dict[str, str]:
     return {"status": "ok", "service": "invitepro-api"}
+
+
+# ===========================================================================
+# QR codes — generated server-side as PNG
+# ===========================================================================
+@app.get("/qr/{token}")
+async def qr_code(token: str) -> fastapi.responses.Response:
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_M,
+        box_size=10,
+        border=2,
+    )
+    qr.add_data(f"invitepro://checkin/{token}")
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="#1c1830", back_color="white")
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    buf.seek(0)
+    return fastapi.responses.Response(
+        content=buf.getvalue(),
+        media_type="image/png",
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
 
 
 # ===========================================================================
