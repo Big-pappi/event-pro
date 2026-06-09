@@ -36,7 +36,7 @@ const CHANNELS = [
 const STEPS = ['Event', 'Template', 'Channel', 'Recipients', 'Review']
 
 export default function SendPage() {
-  const { addToast } = useToast()
+  const { toast } = useToast()
   const { data: events } = useSWR<EventItem[]>('/api/events', fetcher)
   const { data: templates } = useSWR<Template[]>('/api/templates', fetcher)
 
@@ -101,9 +101,9 @@ export default function SendPage() {
       }
       await apiPost(`/api/campaigns/${campaign.id}/advance`, {})
       setResult({ ...campaign, status: 'completed' })
-      addToast('Invitations sent successfully', 'success')
+      toast('Invitations sent successfully', 'success')
     } catch {
-      addToast('Sending failed. Please try again.', 'error')
+      toast('Sending failed. Please try again.', 'error')
       setSending(false)
     }
   }
@@ -112,8 +112,8 @@ export default function SendPage() {
   if (result) {
     return (
       <div className="mx-auto max-w-lg py-12 text-center">
-        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
-          <CheckCircle2 className="h-9 w-9 text-green-600" />
+        <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-success/12">
+          <CheckCircle2 className="h-9 w-9 text-success" />
         </div>
         <h2 className="mt-6 font-serif text-2xl font-semibold">Invitations on their way</h2>
         <p className="mt-2 text-muted-foreground">

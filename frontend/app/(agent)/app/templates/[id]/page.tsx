@@ -17,7 +17,7 @@ const fetcher = (url: string) => fetch(url).then((r) => r.json())
 export default function TemplateEditorPage() {
   const params = useParams<{ id: string }>()
   const router = useRouter()
-  const { addToast } = useToast()
+  const { toast } = useToast()
   const { data, isLoading } = useSWR<Template>(`/api/templates/${params.id}`, fetcher)
   const [draft, setDraft] = React.useState<Template | null>(null)
   const [saving, setSaving] = React.useState(false)
@@ -40,9 +40,9 @@ export default function TemplateEditorPage() {
         thumbnail_color: draft.thumbnail_color,
         is_premium: draft.is_premium,
       })
-      addToast('Template saved', 'success')
+      toast('Template saved', 'success')
     } catch {
-      addToast('Could not save template', 'error')
+      toast('Could not save template', 'error')
     } finally {
       setSaving(false)
     }
